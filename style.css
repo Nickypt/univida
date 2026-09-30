@@ -1,0 +1,94 @@
+/* Importação de Fonte: Plus Jakarta Sans */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+  --accent-glow-violet: rgba(124, 58, 237, 0.15);
+  --accent-glow-emerald: rgba(16, 185, 129, 0.15);
+}
+
+/* Configurações Gerais */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-gradient);
+  color: #334155;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Glassmorphism Delicado */
+.glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 15px 35px -10px rgba(99, 102, 241, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Efeitos de Brilho Suave (Glows) */
+.glow-indigo {
+  box-shadow: 0 4px 20px -2px rgba(99, 102, 241, 0.25);
+}
+
+.glow-emerald {
+  box-shadow: 0 4px 20px -2px rgba(16, 185, 129, 0.25);
+}
+
+.glow-rose {
+  box-shadow: 0 4px 20px -2px rgba(244, 63, 94, 0.25);
+}
+
+/* Controle de Abas */
+.tab-content {
+  display: none;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.tab-content.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animações e Transições */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeInScale 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Botões Interativos */
+.btn-interactive {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-interactive:hover {
+  transform: translateY(-1px);
+}
+
+.btn-interactive:active {
+  transform: translateY(0);
+}

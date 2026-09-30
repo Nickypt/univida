@@ -1,847 +1,560 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>UniVida: Simulador de Orçamento e Vida Universitária</title>
-<!-- Tailwind CSS CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- FontAwesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- Google Fonts Inter -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script>
-tailwind.config = {
-  darkMode: 'class',
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-      },
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniVida - Finanças & Vida Universitária</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
     }
-  }
-}
-</script>
-<style>
-/* Custom scrollbar and smooth mobile transitions */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
-}
-.tab-content {
-  display: none;
-}
-.tab-content.active {
-  display: block;
-  animation: fadeIn 0.25s ease-in-out;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-/* Touch optimization */
-button, select, input {
-  touch-action: manipulation;
-}
-</style>
+    .glow-primary {
+      box-shadow: 0 0 25px rgba(79, 70, 229, 0.3);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.3);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.25s ease-out forwards;
+    }
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white pb-20 md:pb-0">
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen pb-24 sm:pb-10">
 
-<!-- Header & Navigation -->
-<header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between h-16 items-center">
-      <!-- Logo -->
-      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('learn')">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-200 shrink-0">
-          <i class="fa-solid fa-graduation-cap text-lg"></i>
+  <!-- TOP HEADER -->
+  <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200/80">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-xl shadow-md glow-primary">
+          🎓
         </div>
         <div>
-          <span class="text-xl font-extrabold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">UniVida</span>
-          <span class="block text-xs text-slate-500 font-medium leading-none">Orçamento & Faculdade</span>
+          <h1 class="font-black text-slate-900 text-base sm:text-lg leading-tight">UniVida</h1>
+          <p class="text-[10px] sm:text-xs text-slate-500 font-medium">Finanças & Gestão Acadêmica</p>
         </div>
       </div>
-      <!-- Desktop Navigation Tabs -->
-      <nav class="hidden md:flex space-x-1">
-        <button onclick="switchTab('learn')" id="btn-learn" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center space-x-2 bg-indigo-50 text-indigo-700">
-          <i class="fa-solid fa-book-open"></i>
-          <span>Aprenda Fácil</span>
+
+      <!-- DESKTOP NAV TABS -->
+      <nav class="hidden md:flex bg-slate-100 p-1 rounded-2xl border border-slate-200/60">
+        <button id="btn-learn" onclick="switchTab('learn')" class="nav-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-white text-indigo-600 shadow-xs">
+          Aprenda 📚
         </button>
-        <button onclick="switchTab('game')" id="btn-game" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center space-x-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900">
-          <i class="fa-solid fa-gamepad"></i>
-          <span>Simulador (Jogo)</span>
+        <button id="btn-game" onclick="switchTab('game')" class="nav-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-600 transition-all hover:text-indigo-600">
+          Simulador 🎮
         </button>
-        <button onclick="switchTab('calculator')" id="btn-calculator" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center space-x-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900">
-          <i class="fa-solid fa-calculator"></i>
-          <span>Calculadora</span>
+        <button id="btn-calculator" onclick="switchTab('calculator')" class="nav-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-600 transition-all hover:text-indigo-600">
+          Calculadora 🧮
         </button>
-        <button onclick="switchTab('quiz')" id="btn-quiz" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center space-x-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900">
-          <i class="fa-solid fa-trophy"></i>
-          <span>Quiz & Conquistas</span>
+        <button id="btn-quiz" onclick="switchTab('quiz')" class="nav-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-600 transition-all hover:text-indigo-600">
+          Quiz 🏆
         </button>
       </nav>
-      <!-- Mobile Header Quick indicator -->
-      <div class="flex md:hidden items-center">
-        <span id="mobile-top-indicator" class="text-xs font-bold px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full">UniVida 🎓</span>
-      </div>
+
+      <span id="mobile-top-indicator" class="md:hidden text-xs font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100">
+        Aprenda 📚
+      </span>
     </div>
-  </div>
-</header>
+  </header>
 
-<!-- Main Content Container -->
-<main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-5xl mx-auto px-4 pt-6">
 
-  <!-- ================= SECTION 1: APRENDA FÁCIL ================= -->
-  <div id="tab-learn" class="tab-content active">
-    <div class="mb-6 sm:mb-8 text-center max-w-3xl mx-auto">
-      <span class="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-wider rounded-full mb-2">Módulo Educativo</span>
-      <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Guia de Sobrevivência Financeira & Acadêmica</h1>
-      <p class="mt-2 sm:mt-3 text-sm sm:text-base text-slate-600">Domine as bases para gerenciar seu dinheiro, evitar dívidas e sobreviver à faculdade com tranquilidade.</p>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-      <!-- Card 1 -->
-      <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between">
-        <div>
-          <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl mb-4 font-bold">
-            <i class="fa-solid fa-pie-chart"></i>
-          </div>
-          <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2">A Regra 50/30/20 para Estudantes</h3>
-          <p class="text-slate-600 text-sm leading-relaxed mb-4">Como organizar a sua mesada, bolsa ou salário do estágio de forma inteligente e equilibrada.</p>
-          <div id="card-1-details" class="hidden space-y-3 mb-4 text-xs sm:text-sm text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-100">
-            <p><strong>50% Necessidades:</strong> Aluguel, contas de água/luz/internet, transporte público, supermercado e mensalidade.</p>
-            <p><strong>30% Desejos/Lazer:</strong> Saídas com amigos, pedir delivery, serviços de streaming, passeios no fim de semana.</p>
-            <p><strong>20% Poupança/Reserva:</strong> Fundo de emergência (conserto de celular/notebook, consultas) e objetivos futuros.</p>
-          </div>
-        </div>
-        <button onclick="toggleCardDetails('card-1-details', this)" class="w-full sm:w-auto py-2.5 sm:py-0 px-4 sm:px-0 bg-slate-100 sm:bg-transparent rounded-xl text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center justify-center sm:justify-start space-x-1.5 self-start pt-2">
-          <span>Ler mais</span>
-          <i class="fa-solid fa-chevron-down text-xs transition-transform"></i>
-        </button>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between">
-        <div>
-          <div class="w-12 h-12 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center text-xl mb-4 font-bold">
-            <i class="fa-solid fa-scale-balanced"></i>
-          </div>
-          <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2">Custos Fixos vs. Custos Variáveis</h3>
-          <p class="text-slate-600 text-sm leading-relaxed mb-4">Identifique onde seu dinheiro vai todos os meses e aprenda a cortar sem sofrimento.</p>
-          <div id="card-2-details" class="hidden space-y-3 mb-4 text-xs sm:text-sm text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-100">
-            <p><strong>Custos Fixos:</strong> Aqueles que mantêm o mesmo valor todos os meses (aluguel do quarto, passe de ônibus, seguro escolar).</p>
-            <p><strong>Custos Variáveis:</strong> Aqueles que mudam conforme suas escolhas (lanches na faculdade, festas, impressões e cópias).</p>
-            <p><em>Dica de Ouro:</em> Se precisa economizar, foque nos variáveis! É muito mais fácil cortar lanches fora do que mudar de aluguel rápido.</p>
-          </div>
-        </div>
-        <button onclick="toggleCardDetails('card-2-details', this)" class="w-full sm:w-auto py-2.5 sm:py-0 px-4 sm:px-0 bg-slate-100 sm:bg-transparent rounded-xl text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center justify-center sm:justify-start space-x-1.5 self-start pt-2">
-          <span>Ler mais</span>
-          <i class="fa-solid fa-chevron-down text-xs transition-transform"></i>
-        </button>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between">
-        <div>
-          <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl mb-4 font-bold">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-          </div>
-          <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2">Cuidado com Cartões de Crédito & Parcelamentos</h3>
-          <p class="text-slate-600 text-sm leading-relaxed mb-4">Como a facilidade do "compre agora, pague depois" vira armadilha de juros altos.</p>
-          <div id="card-3-details" class="hidden space-y-3 mb-4 text-xs sm:text-sm text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-100">
-            <p><strong>A Ilusão do Limite:</strong> Cartão de crédito não é renda extra, é um empréstimo curto. Se não pagar a fatura total, os juros do rotativo são pesados.</p>
-            <p><strong>Acúmulo de Parcelas:</strong> Várias compras pequenas parceladas criam uma bola de neve para os meses seguintes.</p>
-            <p><em>Regra de Segurança:</em> Evite parcelar gastos de consumo diário (como refeições ou roupas casuais).</p>
-          </div>
-        </div>
-        <button onclick="toggleCardDetails('card-3-details', this)" class="w-full sm:w-auto py-2.5 sm:py-0 px-4 sm:px-0 bg-slate-100 sm:bg-transparent rounded-xl text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center justify-center sm:justify-start space-x-1.5 self-start pt-2">
-          <span>Ler mais</span>
-          <i class="fa-solid fa-chevron-down text-xs transition-transform"></i>
-        </button>
-      </div>
-
-      <!-- Card 4 -->
-      <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm flex flex-col justify-between">
-        <div>
-          <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl mb-4 font-bold">
-            <i class="fa-solid fa-lightbulb"></i>
-          </div>
-          <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2">Dicas Práticas de Economia</h3>
-          <p class="text-slate-600 text-sm leading-relaxed mb-4">Estratégias para gastar menos em livros, alimentação e transporte universitário.</p>
-          <div id="card-4-details" class="hidden space-y-3 mb-4 text-xs sm:text-sm text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-100">
-            <p><strong>Livros Acadêmicos:</strong> Priorize PDFs da biblioteca digital, acervo físico da faculdade ou sebos online/grupos de alunos veteranos.</p>
-            <p><strong>Alimentação Inteligente:</strong> Restaurante Universitário (RU) ou marmitas preparadas no fim de semana reduzem bastante o custo diário.</p>
-            <p><strong>Meia-Entrada e Descontos:</strong> Tenha sempre sua carteirinha de estudante em mãos para transportes e eventos culturais.</p>
-          </div>
-        </div>
-        <button onclick="toggleCardDetails('card-4-details', this)" class="w-full sm:w-auto py-2.5 sm:py-0 px-4 sm:px-0 bg-slate-100 sm:bg-transparent rounded-xl text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center justify-center sm:justify-start space-x-1.5 self-start pt-2">
-          <span>Ler mais</span>
-          <i class="fa-solid fa-chevron-down text-xs transition-transform"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= SECTION 2: SIMULADOR (JOGO) ================= -->
-  <div id="tab-game" class="tab-content">
-    <div id="game-setup-screen" class="max-w-xl mx-auto bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
-      <div class="text-center mb-6 sm:mb-8">
-        <span class="inline-block px-3 py-1 bg-violet-100 text-violet-700 text-xs font-bold uppercase tracking-wider rounded-full mb-2">Módulo Prático (Jogo)</span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Simulador de Vida Universitária</h2>
-        <p class="text-slate-600 mt-2 text-xs sm:text-sm">Escolha seu perfil inicial e tente sobreviver ao semestre sem ir à falência ou ao esgotamento mental!</p>
-      </div>
-      <form id="setup-form" onsubmit="startGame(event)" class="space-y-4 sm:space-y-6">
-        <div>
-          <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5">Nome do Estudante</label>
-          <input type="text" id="player-name" required placeholder="Ex: Beatriz Silva" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-sm">
-        </div>
-        <div>
-          <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5">Curso Superior</label>
-          <select id="player-course" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium bg-white text-sm">
-            <option value="Engenharia">Engenharia de Software (Estudo exigente)</option>
-            <option value="Medicina">Medicina (Muito exigente, rotina intensa)</option>
-            <option value="Artes">Design & Mídia (Materiais específicos)</option>
-            <option value="Gestão">Administração & Economia (Equilibrado)</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5">Tipo de Alojamento</label>
-          <select id="player-housing" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium bg-white text-sm">
-            <option value="pais">Casa dos Pais (Aluguel: R$ 0)</option>
-            <option value="republica">Quarto em República (Aluguel: R$ 600)</option>
-            <option value="sozinho">Morar Sozinho (Aluguel: R$ 1.200)</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5">Trabalho / Estágio</label>
-          <select id="player-job" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium bg-white text-sm">
-            <option value="nenhum">Apenas Ajuda/Bolsa (Renda: R$ 800)</option>
-            <option value="cafe">Trabalho Meio Período (Renda: +R$ 900)</option>
-            <option value="explicacoes">Estágio / Aulas Particulares (Renda: +R$ 1.200)</option>
-          </select>
-        </div>
-        <button type="submit" class="w-full py-3.5 sm:py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-sm sm:text-base shadow-lg shadow-indigo-200 hover:opacity-95 transition-all active:scale-[0.99]">
-          Começar Jornada Universitária 🚀
-        </button>
-      </form>
-    </div>
-
-    <!-- In-Game Dashboard & Turn Interface -->
-    <div id="game-play-screen" class="hidden max-w-3xl mx-auto space-y-4 sm:space-y-6">
-      <!-- Stats Header -->
-      <div class="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm flex flex-col gap-4">
-        <div class="flex items-center justify-between">
+    <!-- ================= SECTION 1: APRENDA (GUIAS E BADGES) ================= -->
+    <div id="tab-learn" class="tab-content active space-y-6">
+      
+      <!-- PAINEL DE CONQUISTAS (BADGES) -->
+      <div class="glass-card rounded-3xl p-6 border border-indigo-100/80 shadow-xs">
+        <div class="flex items-center justify-between mb-4">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-base sm:text-lg shrink-0" id="avatar-initial">B</div>
+            <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-lg">
+              🏆
+            </div>
             <div>
-              <h3 class="font-bold text-slate-900 text-base sm:text-lg" id="display-name">Estudante</h3>
-              <p class="text-xs text-slate-500"><span id="display-course">Curso</span> • Mês <span id="display-month">1</span>/6</p>
+              <h3 class="font-black text-slate-900 text-sm sm:text-base">Galeria de Conquistas Universitárias</h3>
+              <p class="text-[11px] font-semibold text-slate-500">Desbloqueie selos jogando o simulador e organizando seu orçamento.</p>
             </div>
           </div>
-          <span class="text-xs font-bold px-2.5 py-1 bg-violet-100 text-violet-700 rounded-full">Ativo</span>
         </div>
-        <!-- Meters Grid -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
-          <div class="bg-slate-50 px-3 py-2 rounded-xl border border-slate-100 text-center">
-            <span class="block text-[10px] sm:text-xs text-slate-500 font-semibold uppercase">Saldo</span>
-            <span class="text-base sm:text-lg font-extrabold text-emerald-600" id="stat-money">R$ 0</span>
-          </div>
-          <div class="bg-slate-50 px-3 py-2 rounded-xl border border-slate-100 text-center">
-            <span class="block text-[10px] sm:text-xs text-slate-500 font-semibold uppercase">Notas</span>
-            <span class="text-base sm:text-lg font-extrabold text-indigo-600" id="stat-grades">0/100</span>
-          </div>
-          <div class="bg-slate-50 px-3 py-2 rounded-xl border border-slate-100 text-center">
-            <span class="block text-[10px] sm:text-xs text-slate-500 font-semibold uppercase">Saúde Mental</span>
-            <span class="text-base sm:text-lg font-extrabold text-violet-600" id="stat-mental">0/100</span>
-          </div>
-          <div class="bg-slate-50 px-3 py-2 rounded-xl border border-slate-100 text-center">
-            <span class="block text-[10px] sm:text-xs text-slate-500 font-semibold uppercase">Energia</span>
-            <span class="text-base sm:text-lg font-extrabold text-amber-600" id="stat-energy">0/100</span>
-          </div>
+
+        <div id="global-badges-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+          <!-- Renderizado via JS -->
         </div>
       </div>
 
-      <!-- Dilemma Card Area -->
-      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm relative overflow-hidden">
-        <div class="absolute top-0 right-0 bg-indigo-50 text-indigo-700 px-3 py-1 rounded-bl-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider" id="dilemma-tag">Dilema Mensal</div>
-        <h4 class="text-xl sm:text-2xl font-extrabold text-slate-900 mb-2 sm:mb-3 mt-2 sm:mt-0" id="dilemma-title">Carregando dilema...</h4>
-        <p class="text-slate-600 text-xs sm:text-base leading-relaxed mb-6" id="dilemma-desc">...</p>
-        <div id="dilemma-choices" class="grid grid-cols-1 gap-3">
-          <!-- Choices injected dynamically -->
+      <!-- ATALHOS DE ECONOMIA RELÂMPAGO -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-200/80">
+        <h3 class="text-sm font-black uppercase tracking-wider text-slate-800 mb-4 flex items-center space-x-2">
+          <i class="fa-solid fa-bolt text-amber-500"></i>
+          <span>Atalhos de Economia Relâmpago para Estudantes</span>
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <button onclick="openTipModal('softwares')" class="p-4 rounded-2xl bg-slate-50 hover:bg-indigo-50/80 border border-slate-200/80 text-left transition-all group">
+            <span class="text-xl block mb-1">💻</span>
+            <h4 class="font-black text-xs text-slate-900 group-hover:text-indigo-600">Softwares & Streamings</h4>
+            <p class="text-[10px] text-slate-500 font-medium mt-1">Como resgatar licenças de estudante gratuitas.</p>
+          </button>
+
+          <button onclick="openTipModal('transporte')" class="p-4 rounded-2xl bg-slate-50 hover:bg-indigo-50/80 border border-slate-200/80 text-left transition-all group">
+            <span class="text-xl block mb-1">🚌</span>
+            <h4 class="font-black text-xs text-slate-900 group-hover:text-indigo-600">Passe Livre & Meia</h4>
+            <p class="text-[10px] text-slate-500 font-medium mt-1">Direitos e descontos em ônibus e metrô.</p>
+          </button>
+
+          <button onclick="openTipModal('livros')" class="p-4 rounded-2xl bg-slate-50 hover:bg-indigo-50/80 border border-slate-200/80 text-left transition-all group">
+            <span class="text-xl block mb-1">📚</span>
+            <h4 class="font-black text-xs text-slate-900 group-hover:text-indigo-600">Livros & Impressões</h4>
+            <p class="text-[10px] text-slate-500 font-medium mt-1">Acervos digitais e alternativas à xerox.</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- CARDS DE APRENDIZAGEM EXPANSÍVEIS -->
+      <div class="space-y-4">
+        <h3 class="text-sm font-black uppercase tracking-wider text-slate-800">Guia de Sobrevivência Financeira</h3>
+        
+        <div class="glass-card rounded-3xl p-6 border border-slate-200/80">
+          <div class="flex justify-between items-center">
+            <div>
+              <span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase tracking-wider rounded-md">Pilar 01</span>
+              <h4 class="text-base font-black text-slate-900 mt-2">A Regra 50/30/20 na Vida Universitária</h4>
+            </div>
+            <button onclick="toggleCardDetails('learn-1', this)" class="px-3 py-1.5 bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 rounded-xl text-xs font-bold transition-all flex items-center space-x-1">
+              <span>Expandir Conteúdo</span>
+              <i class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+            </button>
+          </div>
+          <div id="learn-1" class="hidden mt-4 pt-4 border-t border-slate-100 text-xs text-slate-600 space-y-2 leading-relaxed">
+            <p>Dividir o dinheiro em três grandes blocos impede que o lazer consuma os custos de sobrevivência:</p>
+            <ul class="list-disc pl-5 space-y-1">
+              <li><strong>50% Necessidades:</strong> Aluguel/república, alimentação básica, transporte e materiais essenciais.</li>
+              <li><strong>30% Desejos Pessoais:</strong> Festas do diretório, saídas no fim de semana, serviços de streaming e hobbies.</li>
+              <li><strong>20% Reserva de Emergência:</strong> Poupança para custos não planejados (imprevistos de saúde, notebook quebrado).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-3xl p-6 border border-slate-200/80">
+          <div class="flex justify-between items-center">
+            <div>
+              <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-wider rounded-md">Pilar 02</span>
+              <h4 class="text-base font-black text-slate-900 mt-2">Evitando a Armadilha do Cartão de Crédito</h4>
+            </div>
+            <button onclick="toggleCardDetails('learn-2', this)" class="px-3 py-1.5 bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 rounded-xl text-xs font-bold transition-all flex items-center space-x-1">
+              <span>Expandir Conteúdo</span>
+              <i class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+            </button>
+          </div>
+          <div id="learn-2" class="hidden mt-4 pt-4 border-t border-slate-100 text-xs text-slate-600 space-y-2 leading-relaxed">
+            <p>O limite do cartão de crédito não é extensão do seu salário. Pagar o valor mínimo da fatura ativa os juros do crédito rotativo, acumulando dívidas rapidamente.</p>
+            <p><strong>Regra de Ouro:</strong> Trate o cartão de crédito como compras no débito, garantindo que o dinheiro total para quitar a fatura já esteja na conta bancária.</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Game Over / Victory Modal Screen -->
-    <div id="game-over-screen" class="hidden max-w-md mx-auto bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-md text-center">
-      <div id="game-over-icon" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl mx-auto flex items-center justify-center text-2xl sm:text-3xl mb-4">🏆</div>
-      <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 mb-2" id="game-over-title">Fim de Jogo</h3>
-      <p class="text-slate-600 text-xs sm:text-sm mb-6" id="game-over-desc">Resumo da sua jornada universitária.</p>
-      <button onclick="resetGame()" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-indigo-600 text-white font-bold text-sm shadow-md hover:bg-indigo-700 transition-all">
-        Jogar Novamente 🔄
+    <!-- ================= SECTION 2: SIMULADOR (JOGO) ================= -->
+    <div id="tab-game" class="tab-content">
+      
+      <!-- SETUP FORM -->
+      <div id="game-setup-screen" class="max-w-xl mx-auto glass-card rounded-3xl p-6 sm:p-10 relative overflow-hidden shadow-lg border border-slate-200/80">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 rounded-3xl bg-indigo-600 text-white flex items-center justify-center text-2xl mx-auto mb-4 glow-primary">
+            <i class="fa-solid fa-gamepad"></i>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Simulador de Vida Universitária</h2>
+          <p class="text-slate-600 mt-2 text-xs sm:text-sm font-medium">
+            Tome decisões financeiras e acadêmicas ao longo de um semestre de 6 meses.
+          </p>
+        </div>
+
+        <form id="setup-form" onsubmit="startGame(event)" class="space-y-5">
+          <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">Seu Nome / Apelido</label>
+            <input type="text" id="player-name" required placeholder="Ex: Beatriz Silva" class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none font-semibold text-sm shadow-xs">
+          </div>
+
+          <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">Curso Universitário</label>
+            <select id="player-course" class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none font-semibold text-sm shadow-xs">
+              <option value="Engenharia de Software">Engenharia de Software (Alta exigência acadêmica)</option>
+              <option value="Medicina">Medicina (Carga horária densa)</option>
+              <option value="Design & Mídia">Design & Mídia (Projetos e materiais)</option>
+              <option value="Administração">Administração (Equilibrado)</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">Alojamento</label>
+              <select id="player-housing" class="w-full px-3.5 py-3 rounded-2xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 font-semibold text-xs shadow-xs">
+                <option value="pais">Casa dos Pais (Aluguel R$ 0)</option>
+                <option value="republica">República (Aluguel R$ 550/mês)</option>
+                <option value="sozinho">Morar Sozinho (Aluguel R$ 1.100/mês)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">Renda / Trabalho</label>
+              <select id="player-job" class="w-full px-3.5 py-3 rounded-2xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 font-semibold text-xs shadow-xs">
+                <option value="nenhum">Apenas Bolsa (R$ 800)</option>
+                <option value="cafe">Meio Período (+R$ 600)</option>
+                <option value="explicacoes">Estágio (+R$ 1.000)</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white font-black text-sm tracking-wide shadow-lg shadow-indigo-500/25 hover:scale-[1.01] active:scale-[0.99] transition-all">
+            Iniciar Semestre Universitário 🚀
+          </button>
+        </form>
+      </div>
+
+      <!-- IN-GAME DASHBOARD -->
+      <div id="game-play-screen" class="hidden max-w-3xl mx-auto space-y-6">
+        
+        <!-- DASHBOARD STATS -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-200/80 shadow-md">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+            <div class="flex items-center space-x-3.5">
+              <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-xl shadow-md" id="avatar-initial">B</div>
+              <div>
+                <h3 class="font-black text-slate-900 text-lg" id="display-name">Estudante</h3>
+                <p class="text-xs font-semibold text-slate-500"><span id="display-course">Curso</span> • Mês <span id="display-month" class="text-indigo-600 font-black">1</span> de 6</p>
+              </div>
+            </div>
+            <div class="px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-black rounded-full flex items-center space-x-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>Em Andamento</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+            <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200/60 text-center">
+              <span class="block text-[10px] font-black uppercase text-slate-400 tracking-wider mb-1">💰 Saldo</span>
+              <span class="text-lg sm:text-xl font-black text-emerald-600" id="stat-money">R$ 0</span>
+            </div>
+            <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200/60 text-center">
+              <span class="block text-[10px] font-black uppercase text-slate-400 tracking-wider mb-1">📚 CR / Notas</span>
+              <span class="text-lg sm:text-xl font-black text-indigo-600" id="stat-grades">0/100</span>
+            </div>
+            <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200/60 text-center">
+              <span class="block text-[10px] font-black uppercase text-slate-400 tracking-wider mb-1">🧠 Saúde Mental</span>
+              <span class="text-lg sm:text-xl font-black text-violet-600" id="stat-mental">0/100</span>
+            </div>
+            <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200/60 text-center">
+              <span class="block text-[10px] font-black uppercase text-slate-400 tracking-wider mb-1">⚡ Energia</span>
+              <span class="text-lg sm:text-xl font-black text-amber-600" id="stat-energy">0/100</span>
+            </div>
+          </div>
+
+          <!-- Ações Rápidas -->
+          <div class="flex flex-col sm:flex-row items-center justify-between bg-indigo-50/60 p-3 rounded-2xl border border-indigo-100 gap-2">
+            <span class="text-xs font-bold text-indigo-900 flex items-center space-x-1">
+              <i class="fa-solid fa-bolt text-indigo-600"></i>
+              <span>Ações Rápidas do Mês:</span>
+            </span>
+            <div class="flex space-x-2 w-full sm:w-auto">
+              <button onclick="quickEnergyBoost()" class="flex-1 sm:flex-none px-3 py-1.5 bg-white text-indigo-700 hover:bg-indigo-600 hover:text-white rounded-xl text-[11px] font-bold border border-indigo-200 shadow-xs transition-all">
+                ☕ Tomar Café (-R$15 / +25⚡)
+              </button>
+              <button onclick="quickRest()" class="flex-1 sm:flex-none px-3 py-1.5 bg-white text-violet-700 hover:bg-violet-600 hover:text-white rounded-xl text-[11px] font-bold border border-violet-200 shadow-xs transition-all">
+                🛌 Descansar (+20⚡ / +10🧠)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- DILEMMA CARD -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-md">
+          <span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-[10px] font-black uppercase tracking-wider rounded-full">
+            Decisão Estratégica do Mês
+          </span>
+          
+          <h4 class="text-xl sm:text-2xl font-black text-slate-900 mt-3 mb-3" id="dilemma-title">Carregando evento...</h4>
+          <p class="text-slate-600 text-sm leading-relaxed mb-6" id="dilemma-desc">...</p>
+          
+          <div id="dilemma-choices" class="grid grid-cols-1 gap-3">
+            <!-- Renderizado via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- GAME OVER SCREEN -->
+      <div id="game-over-screen" class="hidden max-w-md mx-auto glass-card rounded-3xl p-8 text-center shadow-xl">
+        <div id="game-over-icon" class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4">🏆</div>
+        <h3 class="text-2xl font-black text-slate-900 mb-1" id="game-over-title">Fim do Semestre</h3>
+        <p class="text-xs font-semibold text-indigo-600 mb-4" id="game-over-archetype"></p>
+        <p class="text-slate-600 text-xs sm:text-sm mb-6 leading-relaxed" id="game-over-desc">Resumo da sua trajetória.</p>
+        <button onclick="resetGame()" class="w-full py-3.5 rounded-2xl bg-indigo-600 text-white font-bold text-sm shadow-md hover:bg-indigo-700 transition-all">
+          Reiniciar Simulador 🔄
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= SECTION 3: CALCULADORA ================= -->
+    <div id="tab-calculator" class="tab-content">
+      <div class="max-w-4xl mx-auto space-y-6">
+        
+        <div class="text-center mb-6">
+          <div class="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-2xl mx-auto mb-3 glow-primary">
+            <i class="fa-solid fa-calculator"></i>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Planejador Financeiro Universitário</h2>
+          <p class="text-slate-600 text-xs sm:text-sm font-medium mt-1">
+            Monte seu orçamento, descubra seu limite diário e analise a Regra 50/30/20.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- INPUTS (2 COLUNAS) -->
+          <div class="lg:col-span-2 space-y-6">
+            
+            <!-- Receitas -->
+            <div class="glass-card p-5 sm:p-6 rounded-3xl border border-slate-200/80">
+              <h3 class="text-sm font-black uppercase tracking-wider text-emerald-600 mb-4 flex items-center space-x-2">
+                <i class="fa-solid fa-wallet"></i>
+                <span>Rendimentos Mensais (Entradas)</span>
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Bolsa / Mesada (R$)</label>
+                  <input type="number" id="calc-inc-allowance" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Estágio / Emprego (R$)</label>
+                  <input type="number" id="calc-inc-job" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Freelas / Extras (R$)</label>
+                  <input type="number" id="calc-inc-extra" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+              </div>
+            </div>
+
+            <!-- Despesas Fixas -->
+            <div class="glass-card p-5 sm:p-6 rounded-3xl border border-slate-200/80">
+              <h3 class="text-sm font-black uppercase tracking-wider text-indigo-600 mb-4 flex items-center space-x-2">
+                <i class="fa-solid fa-house"></i>
+                <span>Custos Fixos (Necessidades)</span>
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Aluguel / República (R$)</label>
+                  <input type="number" id="calc-exp-rent" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Alimentação / Mercado (R$)</label>
+                  <input type="number" id="calc-exp-food" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Transporte / Passe (R$)</label>
+                  <input type="number" id="calc-exp-transport" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Contas (Luz, Água, Net) (R$)</label>
+                  <input type="number" id="calc-exp-bills" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+              </div>
+            </div>
+
+            <!-- Despesas Variáveis -->
+            <div class="glass-card p-5 sm:p-6 rounded-3xl border border-slate-200/80">
+              <h3 class="text-sm font-black uppercase tracking-wider text-violet-600 mb-4 flex items-center space-x-2">
+                <i class="fa-solid fa-mug-hot"></i>
+                <span>Custos Variáveis (Lazer & Estudos)</span>
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Lazer / Festas (R$)</label>
+                  <input type="number" id="calc-exp-leisure" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Xerox / Livros (R$)</label>
+                  <input type="number" id="calc-exp-study" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Assinaturas (Streaming) (R$)</label>
+                  <input type="number" id="calc-exp-subs" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RESUMO LATERAL -->
+          <div class="space-y-4">
+            
+            <div class="glass-card p-6 rounded-3xl border border-slate-200/80 shadow-md">
+              <h4 class="text-xs font-black uppercase text-slate-400 tracking-wider mb-4">Resumo Mensal</h4>
+              
+              <div class="space-y-3 border-b border-slate-100 pb-4 mb-4">
+                <div class="flex justify-between items-center text-xs font-semibold">
+                  <span class="text-slate-500">Renda Total:</span>
+                  <span id="calc-total-inc" class="text-emerald-600 font-bold">R$ 0,00</span>
+                </div>
+                <div class="flex justify-between items-center text-xs font-semibold">
+                  <span class="text-slate-500">Despesas Totais:</span>
+                  <span id="calc-total-exp" class="text-rose-600 font-bold">R$ 0,00</span>
+                </div>
+              </div>
+
+              <div class="text-center pt-1 mb-4">
+                <span class="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">Saldo Final Mês</span>
+                <span id="calc-balance" class="text-2xl font-black text-emerald-600">+R$ 0,00</span>
+              </div>
+
+              <div class="bg-indigo-50/70 p-3.5 rounded-2xl border border-indigo-100 text-center">
+                <span class="block text-[10px] font-black uppercase tracking-wider text-indigo-500 mb-0.5">Teto de Gastos Livre Diário</span>
+                <span id="calc-daily-limit" class="text-sm font-black text-indigo-900">R$ 0,00 / dia</span>
+                <p class="text-[9px] text-indigo-600 mt-1 font-medium">Gastos diários permitidos sem estourar o mês</p>
+              </div>
+            </div>
+
+            <!-- REGRA 50/30/20 BARS -->
+            <div class="glass-card p-5 rounded-3xl border border-slate-200/80 space-y-3">
+              <h5 class="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center justify-between">
+                <span>Análise Regra 50/30/20</span>
+                <i class="fa-solid fa-chart-pie text-indigo-500"></i>
+              </h5>
+
+              <div>
+                <div class="flex justify-between text-[10px] font-bold mb-1">
+                  <span class="text-slate-600">Necessidades (Max 50%)</span>
+                  <span id="pct-needs-text" class="text-indigo-600">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div id="bar-needs" class="bg-indigo-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-[10px] font-bold mb-1">
+                  <span class="text-slate-600">Desejos/Lazer (Max 30%)</span>
+                  <span id="pct-wants-text" class="text-violet-600">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div id="bar-wants" class="bg-violet-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-[10px] font-bold mb-1">
+                  <span class="text-slate-600">Reserva/Meta (Min 20%)</span>
+                  <span id="pct-savings-text" class="text-emerald-600">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div id="bar-savings" class="bg-emerald-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="calc-feedback" class="p-4 rounded-2xl border text-xs leading-relaxed bg-slate-100 border-slate-200 text-slate-700 font-medium">
+              Preencha os valores acima para visualizar a análise detalhada.
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= SECTION 4: QUIZ ================= -->
+    <div id="tab-quiz" class="tab-content">
+      <div class="max-w-xl mx-auto">
+        
+        <div id="quiz-container" class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-md">
+          <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
+            <span id="quiz-progress" class="text-xs font-black uppercase text-indigo-600 tracking-wider">Pergunta 1 de 5</span>
+            <span id="quiz-score-tracker" class="text-xs font-bold text-slate-500">Pontuação: 0 pts</span>
+          </div>
+
+          <h3 id="quiz-question" class="text-base sm:text-lg font-black text-slate-900 mb-6">Carregando pergunta...</h3>
+
+          <div id="quiz-options" class="space-y-3 mb-6">
+            <!-- Renderizado via JS -->
+          </div>
+
+          <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden w-full py-3.5 rounded-2xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition-all shadow-md">
+            Próxima Pergunta ➔
+          </button>
+        </div>
+
+        <div id="quiz-result-screen" class="hidden glass-card rounded-3xl p-8 text-center shadow-md">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4">🏆</div>
+          <h3 class="text-2xl font-black text-slate-900 mb-1">Desafio Concluído!</h3>
+          <p id="quiz-final-score-text" class="text-sm font-bold text-indigo-600 mb-6">Pontuação final: 0 / 100 pts</p>
+
+          <div id="badges-container" class="flex flex-col items-center justify-center gap-3 mb-6">
+            <!-- Badges conquistadas no quiz -->
+          </div>
+
+          <button onclick="restartQuiz()" class="w-full py-3.5 rounded-2xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition-all shadow-md">
+            Refazer Quiz 🔄
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MOBILE BOTTOM NAVIGATION -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-200 py-2.5 px-6 flex justify-between items-center z-40">
+    <button onclick="switchTab('learn')" class="mobile-nav-btn text-indigo-600 flex flex-col items-center space-y-1">
+      <i class="fa-solid fa-book-open text-base"></i>
+      <span class="text-[10px] font-bold">Aprenda</span>
+    </button>
+    <button onclick="switchTab('game')" class="mobile-nav-btn text-slate-400 flex flex-col items-center space-y-1">
+      <i class="fa-solid fa-gamepad text-base"></i>
+      <span class="text-[10px] font-bold">Jogo</span>
+    </button>
+    <button onclick="switchTab('calculator')" class="mobile-nav-btn text-slate-400 flex flex-col items-center space-y-1">
+      <i class="fa-solid fa-calculator text-base"></i>
+      <span class="text-[10px] font-bold">Calculadora</span>
+    </button>
+    <button onclick="switchTab('quiz')" class="mobile-nav-btn text-slate-400 flex flex-col items-center space-y-1">
+      <i class="fa-solid fa-trophy text-base"></i>
+      <span class="text-[10px] font-bold">Quiz</span>
+    </button>
+  </div>
+
+  <!-- MODAL DE DICAS RELÂMPAGO -->
+  <div id="quick-tip-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+    <div class="glass-card bg-white max-w-md w-full rounded-3xl p-6 shadow-2xl relative border border-slate-100 animate-fadeIn">
+      <button onclick="closeTipModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs transition-all">
+        ✕
+      </button>
+
+      <h3 class="text-base font-black text-slate-900 mb-4 pr-6" id="modal-tip-title">Dica de Economia</h3>
+      <div id="modal-tip-body" class="mb-6">
+        <!-- Conteúdo dinâmico -->
+      </div>
+
+      <button onclick="closeTipModal()" class="w-full py-3 rounded-2xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition-all shadow-md">
+        Entendi! Fechar Dica
       </button>
     </div>
   </div>
 
-  <!-- ================= SECTION 3: CALCULADORA ================= -->
-  <div id="tab-calculator" class="tab-content">
-    <div class="mb-6 sm:mb-8 text-center max-w-3xl mx-auto">
-      <span class="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold uppercase tracking-wider rounded-full mb-2">Ferramenta Utilitária</span>
-      <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Calculadora de Orçamento Pessoal</h1>
-      <p class="mt-2 sm:mt-3 text-sm sm:text-base text-slate-600">Insira seus rendimentos e despesas mensais para ver instantaneamente seu balanço financeiro.</p>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Inputs Form -->
-      <div class="bg-white rounded-3xl p-5 sm:p-8 border border-slate-200 shadow-sm space-y-5">
-        <h3 class="text-base sm:text-xl font-bold text-slate-900 border-b pb-3">📥 Rendimentos Mensais (R$)</h3>
-        <div class="space-y-3">
-          <div>
-            <label class="block text-[11px] sm:text-xs font-bold text-slate-600 uppercase mb-1">Mesada / Ajuda da Família</label>
-            <input type="number" id="calc-inc-allowance" value="800" oninput="calculateBudget()" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium text-sm">
-          </div>
-          <div>
-            <label class="block text-[11px] sm:text-xs font-bold text-slate-600 uppercase mb-1">Estágio / Trabalho / Bolsa</label>
-            <input type="number" id="calc-inc-job" value="600" oninput="calculateBudget()" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium text-sm">
-          </div>
-        </div>
-
-        <h3 class="text-base sm:text-xl font-bold text-slate-900 border-b pb-3 pt-2">💸 Despesas Mensais (R$)</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-[11px] sm:text-xs font-bold text-slate-600 uppercase mb-1">Aluguel / Alojamento</label>
-            <input type="number" id="calc-exp-rent" value="650" oninput="calculateBudget()" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium text-sm">
-          </div>
-          <div>
-            <label class="block text-[11px] sm:text-xs font-bold text-slate-600 uppercase mb-1">Alimentação / RU</label>
-            <input type="number" id="calc-exp-food" value="400" oninput="calculateBudget()" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium text-sm">
-          </div>
-          <div>
-            <label class="block text-[11px] sm:text-xs font-bold text-slate-600 uppercase mb-1">Transportes / Passes</label>
-            <input type="number" id="calc-exp-transport" value="150" oninput="calculateBudget()" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium text-sm">
-          </div>
-          <div>
-            <label class="block text-[11px] sm:text-xs font-bold text-slate-600 uppercase mb-1">Lazer / Outros</label>
-            <input type="number" id="calc-exp-leisure" value="200" oninput="calculateBudget()" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium text-sm">
-          </div>
-        </div>
-      </div>
-
-      <!-- Results & Feedback Dashboard -->
-      <div class="space-y-6">
-        <div class="bg-white rounded-3xl p-5 sm:p-8 border border-slate-200 shadow-sm">
-          <h3 class="text-base sm:text-xl font-bold text-slate-900 mb-4 sm:mb-6">📊 Resumo do Orçamento</h3>
-          <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-6">
-            <div class="bg-emerald-50 p-3 sm:p-4 rounded-2xl border border-emerald-100 text-center">
-              <span class="block text-[9px] sm:text-xs font-bold text-emerald-700 uppercase">Receitas</span>
-              <span class="text-sm sm:text-xl font-extrabold text-emerald-800" id="calc-total-inc">R$ 1.400</span>
-            </div>
-            <div class="bg-rose-50 p-3 sm:p-4 rounded-2xl border border-rose-100 text-center">
-              <span class="block text-[9px] sm:text-xs font-bold text-rose-700 uppercase">Despesas</span>
-              <span class="text-sm sm:text-xl font-extrabold text-rose-800" id="calc-total-exp">R$ 1.400</span>
-            </div>
-            <div class="bg-indigo-50 p-3 sm:p-4 rounded-2xl border border-indigo-100 text-center">
-              <span class="block text-[9px] sm:text-xs font-bold text-indigo-700 uppercase">Balanço</span>
-              <span class="text-sm sm:text-xl font-extrabold" id="calc-balance">R$ 0</span>
-            </div>
-          </div>
-
-          <!-- Progress Bar for Rule 50/30/20 -->
-          <div class="space-y-2 mb-6">
-            <div class="flex justify-between text-xs font-bold text-slate-600">
-              <span>Distribuição</span>
-              <span id="savings-ratio-text">Taxa: 0%</span>
-            </div>
-            <div class="w-full bg-slate-100 h-4 rounded-full overflow-hidden flex">
-              <div id="bar-needs" class="bg-indigo-500 h-full transition-all" style="width: 50%" title="Necessidades"></div>
-              <div id="bar-leisure" class="bg-violet-400 h-full transition-all" style="width: 30%" title="Lazer"></div>
-              <div id="bar-savings" class="bg-emerald-500 h-full transition-all" style="width: 20%" title="Poupança"></div>
-            </div>
-          </div>
-
-          <!-- Feedback Box -->
-          <div id="calc-feedback" class="p-4 rounded-2xl border text-xs sm:text-sm leading-relaxed bg-amber-50 border-amber-200 text-amber-900">
-            <strong>Atenção:</strong> Seu orçamento está no limite. Qualquer imprevisto pode gerar saldo negativo.
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= SECTION 4: QUIZ & CONQUISTAS ================= -->
-  <div id="tab-quiz" class="tab-content">
-    <div class="mb-6 sm:mb-8 text-center max-w-3xl mx-auto">
-      <span class="inline-block px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold uppercase tracking-wider rounded-full mb-2">Teste de Conhecimentos</span>
-      <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Quiz de Educação Financeira</h1>
-      <p class="mt-2 sm:mt-3 text-sm sm:text-base text-slate-600">Responda corretamente às perguntas, acumule pontos e desbloqueie medalhas virtuais!</p>
-    </div>
-
-    <!-- Quiz Container -->
-    <div class="max-w-xl mx-auto bg-white rounded-3xl p-5 sm:p-8 border border-slate-200 shadow-sm" id="quiz-container">
-      <div class="flex justify-between items-center mb-4 sm:mb-6 border-b pb-3">
-        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider" id="quiz-progress">Pergunta 1 de 5</span>
-        <span class="text-xs font-bold text-slate-500" id="quiz-score-tracker">Pontuação: 0 pts</span>
-      </div>
-      <h3 class="text-base sm:text-xl font-bold text-slate-900 mb-4 sm:mb-6" id="quiz-question">Carregando pergunta...</h3>
-      <div id="quiz-options" class="space-y-3 mb-6">
-        <!-- Options injected dynamically -->
-      </div>
-      <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden w-full py-3.5 rounded-xl bg-indigo-600 text-white font-bold text-sm shadow-md hover:bg-indigo-700 transition-all">
-        Próxima Pergunta ➡️
-      </button>
-    </div>
-
-    <!-- Quiz Results & Badges -->
-    <div id="quiz-result-screen" class="hidden max-w-xl mx-auto bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm text-center">
-      <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl sm:text-3xl mx-auto mb-4">🏆</div>
-      <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 mb-2">Quiz Concluído!</h3>
-      <p class="text-slate-600 text-sm sm:text-base mb-6" id="quiz-final-score-text">Pontuação final: 0 / 100 pts</p>
-      <div class="mb-6">
-        <h4 class="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">Conquistas Desbloqueadas</h4>
-        <div class="flex flex-wrap justify-center gap-3" id="badges-container">
-          <!-- Badges injected -->
-        </div>
-      </div>
-      <button onclick="restartQuiz()" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-indigo-600 text-white font-bold text-sm shadow-md hover:bg-indigo-700 transition-all">
-        Tentar Novamente 🔄
-      </button>
-    </div>
-  </div>
-
-</main>
-
-<!-- Mobile Bottom Navigation Bar -->
-<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 py-2 px-4 z-50 shadow-lg">
-  <div class="grid grid-cols-4 gap-1 text-center">
-    <button onclick="switchTab('learn')" id="m-btn-learn" class="mobile-nav-btn flex flex-col items-center justify-center py-1 text-indigo-600">
-      <i class="fa-solid fa-book-open text-lg mb-0.5"></i>
-      <span class="text-[10px] font-bold">Aprender</span>
-    </button>
-    <button onclick="switchTab('game')" id="m-btn-game" class="mobile-nav-btn flex flex-col items-center justify-center py-1 text-slate-500 hover:text-slate-900">
-      <i class="fa-solid fa-gamepad text-lg mb-0.5"></i>
-      <span class="text-[10px] font-semibold">Simulador</span>
-    </button>
-    <button onclick="switchTab('calculator')" id="m-btn-calculator" class="mobile-nav-btn flex flex-col items-center justify-center py-1 text-slate-500 hover:text-slate-900">
-      <i class="fa-solid fa-calculator text-lg mb-0.5"></i>
-      <span class="text-[10px] font-semibold">Calculadora</span>
-    </button>
-    <button onclick="switchTab('quiz')" id="m-btn-quiz" class="mobile-nav-btn flex flex-col items-center justify-center py-1 text-slate-500 hover:text-slate-900">
-      <i class="fa-solid fa-trophy text-lg mb-0.5"></i>
-      <span class="text-[10px] font-semibold">Quiz</span>
-    </button>
-  </div>
-</nav>
-
-<!-- Footer for Desktop -->
-<footer class="hidden md:block bg-white border-t border-slate-200 mt-16 py-8">
-  <div class="max-w-7xl mx-auto px-4 text-center text-sm text-slate-500">
-    <p>UniVida © 2026 • Ferramenta interativa de apoio ao desenvolvimento financeiro do estudante.</p>
-  </div>
-</footer>
-
-<!-- JavaScript Application Logic -->
-<script>
-// --- NAVIGATION TABS ---
-function switchTab(tabId) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  
-  // Desktop buttons
-  document.querySelectorAll('.nav-btn').forEach(el => {
-    el.classList.remove('bg-indigo-50', 'text-indigo-700');
-    el.classList.add('text-slate-600', 'hover:bg-slate-100', 'hover:text-slate-900');
-  });
-
-  // Mobile bottom buttons
-  document.querySelectorAll('.mobile-nav-btn').forEach(el => {
-    el.classList.remove('text-indigo-600');
-    el.classList.add('text-slate-500');
-    const span = el.querySelector('span');
-    if(span) {
-      span.classList.remove('font-bold');
-      span.classList.add('font-semibold');
-    }
-  });
-
-  document.getElementById('tab-' + tabId).classList.add('active');
-  
-  const btn = document.getElementById('btn-' + tabId);
-  if(btn) {
-    btn.classList.remove('text-slate-600', 'hover:bg-slate-100', 'hover:text-slate-900');
-    btn.classList.add('bg-indigo-50', 'text-indigo-700');
-  }
-
-  // Highlight mobile bottom bar item
-  const titlesMap = { 'learn': 'Aprenda Fácil 📚', 'game': 'Simulador 🎮', 'calculator': 'Calculadora 🧮', 'quiz': 'Quiz & Conquistas 🏆' };
-  const topIndicator = document.getElementById('mobile-top-indicator');
-  if(topIndicator) topIndicator.textContent = titlesMap[tabId] || 'UniVida 🎓';
-
-  const mobileBtnMap = { 'learn': 0, 'game': 1, 'calculator': 2, 'quiz': 3 };
-  const mButtons = document.querySelectorAll('.mobile-nav-btn');
-  if(mButtons[mobileBtnMap[tabId]]) {
-    mButtons[mobileBtnMap[tabId]].classList.remove('text-slate-500');
-    mButtons[mobileBtnMap[tabId]].classList.add('text-indigo-600');
-    const span = mButtons[mobileBtnMap[tabId]].querySelector('span');
-    if(span) {
-      span.classList.remove('font-semibold');
-      span.classList.add('font-bold');
-    }
-  }
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// --- LEARN CARD EXPAND ---
-function toggleCardDetails(id, btn) {
-  const el = document.getElementById(id);
-  const icon = btn.querySelector('i');
-  el.classList.toggle('hidden');
-  if(el.classList.contains('hidden')) {
-    btn.querySelector('span').textContent = 'Ler mais';
-    icon.style.transform = 'rotate(0deg)';
-  } else {
-    btn.querySelector('span').textContent = 'Recolher';
-    icon.style.transform = 'rotate(180deg)';
-  }
-}
-
-// --- SIMULATOR GAME LOGIC ---
-let gameState = {
-  name: '',
-  course: '',
-  housing: '',
-  job: '',
-  money: 1000,
-  grades: 75,
-  mental: 80,
-  energy: 85,
-  month: 1,
-  maxMonths: 6
-};
-
-const dilemmaPool = [
-  {
-    title: "O Livro Acadêmico Obrigatório",
-    desc: "O professor exigiu um livro essencial para a disciplina que custa R$ 220 novo. Você pode buscar alternativas.",
-    choices: [
-      { text: "Comprar livro novo (R$ 220)", money: -220, grades: +10, mental: 0, energy: -5 },
-      { text: "Pegar na biblioteca / PDF (R$ 30 em cópias)", money: -30, grades: +5, mental: -5, energy: -10 },
-      { text: "Ignorar e arriscar sem livro", money: 0, grades: -20, mental: +5, energy: +5 }
-    ]
-  },
-  {
-    title: "Viagem com a Turma",
-    desc: "Seus colegas convidaram para passar o fim de semana em um sítio. Custa R$ 300, mas sua mente precisa descansar.",
-    choices: [
-      { text: "Ir e aproveitar (R$ 300)", money: -300, grades: -5, mental: +25, energy: +15 },
-      { text: "Recusar e estudar no fim de semana", money: 0, grades: +10, mental: -15, energy: -10 },
-      { text: "Ir apenas no sábado (R$ 150)", money: -150, grades: 0, mental: +10, energy: 0 }
-    ]
-  },
-  {
-    title: "Problema no Celular/Notebook",
-    desc: "Seu computador travou no meio do semestre! Você precisa consertar urgentemente para entregar os trabalhos.",
-    choices: [
-      { text: "Conserto urgente na assistência (R$ 400)", money: -400, grades: +10, mental: -10, energy: -5 },
-      { text: "Pedir ajuda a um amigo (R$ 0)", money: 0, grades: 0, mental: -20, energy: -10 },
-      { text: "Usar os computadores dos laboratórios da faculdade", money: 0, grades: -10, mental: -15, energy: -20 }
-    ]
-  },
-  {
-    title: "Comemoração de Fim de Provas",
-    desc: "A turma marcou uma pizzaria para comemorar o fim da semana de provas. O custo médio é de R$ 90.",
-    choices: [
-      { text: "Ir à comemoração (R$ 90)", money: -90, grades: -5, mental: +20, energy: +10 },
-      { text: "Ficar em casa e comer o que tem na geladeira", money: 0, grades: 0, mental: -10, energy: -5 }
-    ]
-  },
-  {
-    title: "Bico / Aulas Particulares",
-    desc: "Um estudante do ensino médio pediu aulas particulares. É uma oportunidade de renda extra.",
-    choices: [
-      { text: "Aceitar a oportunidade (+R$ 300)", money: +300, grades: +5, mental: -15, energy: -20 },
-      { text: "Recusar para focar no descanso", money: 0, grades: 0, mental: +10, energy: +10 }
-    ]
-  }
-];
-
-function startGame(e) {
-  e.preventDefault();
-  gameState.name = document.getElementById('player-name').value;
-  gameState.course = document.getElementById('player-course').value;
-  gameState.housing = document.getElementById('player-housing').value;
-  gameState.job = document.getElementById('player-job').value;
-  gameState.money = 1200;
-  gameState.grades = 75;
-  gameState.mental = 85;
-  gameState.energy = 85;
-  gameState.month = 1;
-
-  document.getElementById('display-name').textContent = gameState.name;
-  document.getElementById('display-course').textContent = gameState.course;
-  document.getElementById('avatar-initial').textContent = gameState.name.charAt(0).toUpperCase();
-
-  document.getElementById('game-setup-screen').classList.add('hidden');
-  document.getElementById('game-over-screen').classList.add('hidden');
-  document.getElementById('game-play-screen').classList.remove('hidden');
-
-  renderDilemma();
-}
-
-function renderDilemma() {
-  if(gameState.month > 1) {
-    applyMonthlyFixedCosts();
-  }
-
-  if (gameState.money < 0) {
-    endGame(false, "Falência! Seu saldo ficou negativo e não foi possível cobrir os custos básicos.");
-    return;
-  }
-  if (gameState.grades <= 0) {
-    endGame(false, "Reprovado! Suas notas caíram demais por falta de tempo e dedicação aos estudos.");
-    return;
-  }
-  if (gameState.mental <= 0) {
-    endGame(false, "Esgotamento! O estresse acumulado foi alto demais e você precisou trancar o semestre.");
-    return;
-  }
-  if (gameState.month > gameState.maxMonths) {
-    endGame(true, "Parabéns! Você concluiu o semestre mantendo o orçamento e a rotina sob controle!");
-    return;
-  }
-
-  document.getElementById('display-month').textContent = gameState.month;
-  updateStatsUI();
-
-  const dilemma = dilemmaPool[(gameState.month - 1) % dilemmaPool.length];
-  document.getElementById('dilemma-title').textContent = dilemma.title;
-  document.getElementById('dilemma-desc').textContent = dilemma.desc;
-
-  const choicesContainer = document.getElementById('dilemma-choices');
-  choicesContainer.innerHTML = '';
-
-  dilemma.choices.forEach((choice) => {
-    const btn = document.createElement('button');
-    btn.className = "w-full p-3.5 sm:p-4 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-indigo-50 hover:border-indigo-200 text-left transition-all font-semibold text-xs sm:text-sm text-slate-800 flex justify-between items-center group active:scale-[0.99]";
-    btn.innerHTML = `<span>${choice.text}</span> <i class="fa-solid fa-arrow-right text-slate-400 group-hover:text-indigo-600 transition-transform shrink-0 ml-2"></i>`;
-    btn.onclick = () => makeChoice(choice);
-    choicesContainer.appendChild(btn);
-  });
-}
-
-function applyMonthlyFixedCosts() {
-  let rent = 0;
-  if (gameState.housing === 'republica') rent = 600;
-  if (gameState.housing === 'sozinho') rent = 1200;
-
-  let income = 800;
-  if (gameState.job === 'cafe') income += 900;
-  if (gameState.job === 'explicacoes') income += 1200;
-
-  gameState.money += (income - rent);
-  gameState.energy = Math.min(100, gameState.energy + 10);
-}
-
-function makeChoice(choice) {
-  gameState.money += choice.money;
-  gameState.grades = Math.max(0, Math.min(100, gameState.grades + choice.grades));
-  gameState.mental = Math.max(0, Math.min(100, gameState.mental + choice.mental));
-  gameState.energy = Math.max(0, Math.min(100, gameState.energy + choice.energy));
-  gameState.month++;
-  renderDilemma();
-}
-
-function updateStatsUI() {
-  document.getElementById('stat-money').textContent = 'R$ ' + gameState.money;
-  document.getElementById('stat-grades').textContent = gameState.grades + '/100';
-  document.getElementById('stat-mental').textContent = gameState.mental + '/100';
-  document.getElementById('stat-energy').textContent = gameState.energy + '/100';
-}
-
-function endGame(isVictory, message) {
-  document.getElementById('game-play-screen').classList.add('hidden');
-  const overScreen = document.getElementById('game-over-screen');
-  overScreen.classList.remove('hidden');
-
-  const icon = document.getElementById('game-over-icon');
-  const title = document.getElementById('game-over-title');
-  const desc = document.getElementById('game-over-desc');
-
-  if(isVictory) {
-    icon.textContent = "🏆";
-    icon.className = "w-14 h-14 sm:w-16 sm:h-16 rounded-2xl mx-auto flex items-center justify-center text-2xl sm:text-3xl mb-4 bg-emerald-100 text-emerald-600";
-    title.textContent = "Vitória Acadêmica!";
-  } else {
-    icon.textContent = "⚠️";
-    icon.className = "w-14 h-14 sm:w-16 sm:h-16 rounded-2xl mx-auto flex items-center justify-center text-2xl sm:text-3xl mb-4 bg-rose-100 text-rose-600";
-    title.textContent = "Fim de Linha";
-  }
-  desc.textContent = message;
-}
-
-function resetGame() {
-  document.getElementById('game-over-screen').classList.add('hidden');
-  document.getElementById('game-setup-screen').classList.remove('hidden');
-}
-
-// --- CALCULATOR LOGIC ---
-function calculateBudget() {
-  const incAllowance = parseFloat(document.getElementById('calc-inc-allowance').value) || 0;
-  const incJob = parseFloat(document.getElementById('calc-inc-job').value) || 0;
-  const totalInc = incAllowance + incJob;
-
-  const expRent = parseFloat(document.getElementById('calc-exp-rent').value) || 0;
-  const expFood = parseFloat(document.getElementById('calc-exp-food').value) || 0;
-  const expTransport = parseFloat(document.getElementById('calc-exp-transport').value) || 0;
-  const expLeisure = parseFloat(document.getElementById('calc-exp-leisure').value) || 0;
-  const totalExp = expRent + expFood + expTransport + expLeisure;
-
-  const balance = totalInc - totalExp;
-
-  document.getElementById('calc-total-inc').textContent = 'R$ ' + totalInc.toLocaleString('pt-BR');
-  document.getElementById('calc-total-exp').textContent = 'R$ ' + totalExp.toLocaleString('pt-BR');
-
-  const balEl = document.getElementById('calc-balance');
-  balEl.textContent = (balance >= 0 ? '+R$ ' : '-R$ ') + Math.abs(balance).toLocaleString('pt-BR');
-  balEl.className = "text-sm sm:text-xl font-extrabold " + (balance >= 0 ? "text-emerald-600" : "text-rose-600");
-
-  const feedbackEl = document.getElementById('calc-feedback');
-  if (balance < 0) {
-    feedbackEl.className = "p-4 rounded-2xl border text-xs sm:text-sm leading-relaxed bg-rose-50 border-rose-200 text-rose-900";
-    feedbackEl.innerHTML = "<strong>Déficit Financeiro:</strong> Seus gastos estão maiores do que a renda. É hora de rever os custos variáveis.";
-  } else if (balance < 150) {
-    feedbackEl.className = "p-4 rounded-2xl border text-xs sm:text-sm leading-relaxed bg-amber-50 border-amber-200 text-amber-900";
-    feedbackEl.innerHTML = "<strong>Orçamento Apertado:</strong> As contas fecham, mas sobra pouca margem para emergências.";
-  } else {
-    feedbackEl.className = "p-4 rounded-2xl border text-xs sm:text-sm leading-relaxed bg-emerald-50 border-emerald-200 text-emerald-900";
-    feedbackEl.innerHTML = "<strong>Excelente Gestão!</strong> Você está conseguindo guardar dinheiro todo mês para seus objetivos.";
-  }
-}
-
-// --- QUIZ LOGIC ---
-const quizQuestions = [
-  {
-    q: "Qual é a porcentagem sugerida para gastos com lazer na regra 50/30/20?",
-    options: ["10%", "30%", "50%", "80%"],
-    answer: 1
-  },
-  {
-    q: "O que é considerado um custo fixo no orçamento do estudante?",
-    options: ["Jantares fora no fim de semana", "Roupas novas", "Aluguel do quarto ou moradia", "Ingressos de cinema"],
-    answer: 2
-  },
-  {
-    q: "Qual o risco do mau uso do cartão de crédito?",
-    options: ["Frete grátis automático", "Juros altos no rotativo e sensação falsa de renda", "Proibição de usar compras virtuais", "Aumentar as notas da faculdade"],
-    answer: 1
-  },
-  {
-    q: "Qual destas práticas ajuda a economizar na compra de livros da faculdade?",
-    options: ["Comprar sempre edições novas de luxo", "Consultar o acervo da biblioteca ou comprar de veteranos", "Imprimir todas as páginas em papel fotográfico", "Comprar duas cópias do mesmo livro"],
-    answer: 1
-  },
-  {
-    q: "Por que ter uma Reserva de Emergência é recomendado?",
-    options: ["Para gastar em jogos eletrônicos", "Para cobrir imprevistos como consertos de celular ou remédios", "Para ostentar com os amigos", "Para viajar nas férias de surpresa"],
-    answer: 1
-  }
-];
-
-let currentQuizIndex = 0;
-let quizScore = 0;
-
-function loadQuizQuestion() {
-  if(currentQuizIndex >= quizQuestions.length) {
-    showQuizResults();
-    return;
-  }
-
-  const q = quizQuestions[currentQuizIndex];
-  document.getElementById('quiz-progress').textContent = `Pergunta ${currentQuizIndex + 1} de ${quizQuestions.length}`;
-  document.getElementById('quiz-score-tracker').textContent = `Pontuação: ${quizScore} pts`;
-  document.getElementById('quiz-question').textContent = q.q;
-
-  const optionsContainer = document.getElementById('quiz-options');
-  optionsContainer.innerHTML = '';
-
-  document.getElementById('quiz-next-btn').classList.add('hidden');
-
-  q.options.forEach((opt, idx) => {
-    const btn = document.createElement('button');
-    btn.className = "w-full p-3.5 sm:p-4 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-indigo-50 hover:border-indigo-200 text-left transition-all font-semibold text-xs sm:text-sm text-slate-800 active:scale-[0.99]";
-    btn.textContent = opt;
-    btn.onclick = () => selectQuizAnswer(idx, btn);
-    optionsContainer.appendChild(btn);
-  });
-}
-
-function selectQuizAnswer(selectedIdx, btnElement) {
-  const q = quizQuestions[currentQuizIndex];
-  const allBtns = document.getElementById('quiz-options').children;
-
-  for(let b of allBtns) {
-    b.disabled = true;
-  }
-
-  if(selectedIdx === q.answer) {
-    btnElement.className = "w-full p-3.5 sm:p-4 rounded-2xl border border-emerald-300 bg-emerald-50 text-emerald-800 font-semibold text-xs sm:text-sm text-left";
-    quizScore += 20;
-  } else {
-    btnElement.className = "w-full p-3.5 sm:p-4 rounded-2xl border border-rose-300 bg-rose-50 text-rose-800 font-semibold text-xs sm:text-sm text-left";
-    allBtns[q.answer].className = "w-full p-3.5 sm:p-4 rounded-2xl border border-emerald-300 bg-emerald-50 text-emerald-800 font-semibold text-xs sm:text-sm text-left";
-  }
-
-  document.getElementById('quiz-score-tracker').textContent = `Pontuação: ${quizScore} pts`;
-  document.getElementById('quiz-next-btn').classList.remove('hidden');
-}
-
-function nextQuizQuestion() {
-  currentQuizIndex++;
-  loadQuizQuestion();
-}
-
-function showQuizResults() {
-  document.getElementById('quiz-container').classList.add('hidden');
-  document.getElementById('quiz-result-screen').classList.remove('hidden');
-  document.getElementById('quiz-final-score-text').textContent = `Pontuação final: ${quizScore} / 100 pts`;
-
-  const badgesContainer = document.getElementById('badges-container');
-  badgesContainer.innerHTML = '';
-
-  let badges = [];
-  if(quizScore >= 40) badges.push({ name: "Mestre da Economia 🪙", desc: "Compreende os conceitos fundamentais de controle financeiro." });
-  if(quizScore >= 80) badges.push({ name: "Gestor Universitário 🎓", desc: "Domina a organização financeira durante a faculdade!" });
-  if(quizScore === 100) badges.push({ name: "Especialista Financeiro 📈", desc: "Acertou 100% das perguntas do quiz!" });
-
-  if(badges.length === 0) {
-    badgesContainer.innerHTML = `<p class="text-xs sm:text-sm text-slate-500">Revise os conteúdos da seção 'Aprenda Fácil' para refazer o teste!</p>`;
-  } else {
-    badges.forEach(b => {
-      const badgeCard = document.createElement('div');
-      badgeCard.className = "bg-indigo-50 border border-indigo-200 p-3.5 rounded-2xl text-center max-w-xs shadow-sm w-full";
-      badgeCard.innerHTML = `<h5 class="font-bold text-indigo-900 text-xs sm:text-sm mb-1">${b.name}</h5><p class="text-[10px] sm:text-xs text-indigo-700">${b.desc}</p>`;
-      badgesContainer.appendChild(badgeCard);
-    });
-  }
-}
-
-function restartQuiz() {
-  currentQuizIndex = 0;
-  quizScore = 0;
-  document.getElementById('quiz-result-screen').classList.add('hidden');
-  document.getElementById('quiz-container').classList.remove('hidden');
-  loadQuizQuestion();
-}
-
-window.onload = function() {
-  calculateBudget();
-  loadQuizQuestion();
-};
-</script>
+  <script src="script.js"></script>
 </body>
 </html>

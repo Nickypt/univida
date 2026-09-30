@@ -1,148 +1,560 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Elegante</title>
-
-  <!-- Tailwind CSS via CDN -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniVida - Finanças & Vida Universitária</title>
+  
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- Arquivo de Estilos Personalizado -->
-  <link rel="stylesheet" href="style.css" />
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+    }
+    .glow-primary {
+      box-shadow: 0 0 25px rgba(79, 70, 229, 0.3);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.3);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.25s ease-out forwards;
+    }
+  </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen pb-24 sm:pb-10">
 
-  <div class="max-w-5xl mx-auto space-y-6">
-
-    <!-- Cabeçalho -->
-    <header class="glass-card rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 animate-fadeIn">
+  <!-- TOP HEADER -->
+  <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200/80">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="p-3 bg-indigo-500/10 text-indigo-600 rounded-xl glow-indigo">
-          <i data-lucide="sparkles" class="w-6 h-6"></i>
+        <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-xl shadow-md glow-primary">
+          🎓
         </div>
         <div>
-          <h1 class="text-xl font-bold text-slate-800">Painel Principal</h1>
-          <p class="text-xs text-slate-500">Design moderno e delicado</p>
+          <h1 class="font-black text-slate-900 text-base sm:text-lg leading-tight">UniVida</h1>
+          <p class="text-[10px] sm:text-xs text-slate-500 font-medium">Finanças & Gestão Acadêmica</p>
         </div>
       </div>
 
-      <!-- Navegação por Abas -->
-      <nav class="flex bg-slate-100/80 p-1 rounded-xl border border-slate-200/60 text-sm">
-        <button onclick="openTab('overview')" class="tab-btn active px-4 py-2 rounded-lg font-medium text-slate-700 bg-white shadow-sm transition-all">Visão Geral</button>
-        <button onclick="openTab('analytics')" class="tab-btn px-4 py-2 rounded-lg font-medium text-slate-500 hover:text-slate-700 transition-all">Relatórios</button>
+      <!-- DESKTOP NAV TABS -->
+      <nav class="hidden md:flex bg-slate-100 p-1 rounded-2xl border border-slate-200/60">
+        <button id="btn-learn" onclick="switchTab('learn')" class="nav-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-white text-indigo-600 shadow-xs">
+          Aprenda 📚
+        </button>
+        <button id="btn-game" onclick="switchTab('game')" class="nav-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-600 transition-all hover:text-indigo-600">
+          Simulador 🎮
+        </button>
+        <button id="btn-calculator" onclick="switchTab('calculator')" class="nav-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-600 transition-all hover:text-indigo-600">
+          Calculadora 🧮
+        </button>
+        <button id="btn-quiz" onclick="switchTab('quiz')" class="nav-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-600 transition-all hover:text-indigo-600">
+          Quiz 🏆
+        </button>
       </nav>
-    </header>
 
-    <!-- Conteúdo: Aba 1 (Visão Geral) -->
-    <main id="overview" class="tab-content active space-y-6 animate-fadeIn">
+      <span id="mobile-top-indicator" class="md:hidden text-xs font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100">
+        Aprenda 📚
+      </span>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-5xl mx-auto px-4 pt-6">
+
+    <!-- ================= SECTION 1: APRENDA (GUIAS E BADGES) ================= -->
+    <div id="tab-learn" class="tab-content active space-y-6">
       
-      <!-- Cards de Métricas -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- PAINEL DE CONQUISTAS (BADGES) -->
+      <div class="glass-card rounded-3xl p-6 border border-indigo-100/80 shadow-xs">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-lg">
+              🏆
+            </div>
+            <div>
+              <h3 class="font-black text-slate-900 text-sm sm:text-base">Galeria de Conquistas Universitárias</h3>
+              <p class="text-[11px] font-semibold text-slate-500">Desbloqueie selos jogando o simulador e organizando seu orçamento.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="global-badges-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+          <!-- Renderizado via JS -->
+        </div>
+      </div>
+
+      <!-- ATALHOS DE ECONOMIA RELÂMPAGO -->
+      <div class="glass-card rounded-3xl p-6 border border-slate-200/80">
+        <h3 class="text-sm font-black uppercase tracking-wider text-slate-800 mb-4 flex items-center space-x-2">
+          <i class="fa-solid fa-bolt text-amber-500"></i>
+          <span>Atalhos de Economia Relâmpago para Estudantes</span>
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <button onclick="openTipModal('softwares')" class="p-4 rounded-2xl bg-slate-50 hover:bg-indigo-50/80 border border-slate-200/80 text-left transition-all group">
+            <span class="text-xl block mb-1">💻</span>
+            <h4 class="font-black text-xs text-slate-900 group-hover:text-indigo-600">Softwares & Streamings</h4>
+            <p class="text-[10px] text-slate-500 font-medium mt-1">Como resgatar licenças de estudante gratuitas.</p>
+          </button>
+
+          <button onclick="openTipModal('transporte')" class="p-4 rounded-2xl bg-slate-50 hover:bg-indigo-50/80 border border-slate-200/80 text-left transition-all group">
+            <span class="text-xl block mb-1">🚌</span>
+            <h4 class="font-black text-xs text-slate-900 group-hover:text-indigo-600">Passe Livre & Meia</h4>
+            <p class="text-[10px] text-slate-500 font-medium mt-1">Direitos e descontos em ônibus e metrô.</p>
+          </button>
+
+          <button onclick="openTipModal('livros')" class="p-4 rounded-2xl bg-slate-50 hover:bg-indigo-50/80 border border-slate-200/80 text-left transition-all group">
+            <span class="text-xl block mb-1">📚</span>
+            <h4 class="font-black text-xs text-slate-900 group-hover:text-indigo-600">Livros & Impressões</h4>
+            <p class="text-[10px] text-slate-500 font-medium mt-1">Acervos digitais e alternativas à xerox.</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- CARDS DE APRENDIZAGEM EXPANSÍVEIS -->
+      <div class="space-y-4">
+        <h3 class="text-sm font-black uppercase tracking-wider text-slate-800">Guia de Sobrevivência Financeira</h3>
         
-        <div class="glass-card rounded-2xl p-5 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Receita Total</p>
-            <h3 class="text-2xl font-bold text-slate-800 mt-1">R$ 24.500</h3>
-            <span class="text-xs text-emerald-600 font-medium inline-flex items-center mt-2">
-              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-1"></i> +12% este mês
-            </span>
+        <div class="glass-card rounded-3xl p-6 border border-slate-200/80">
+          <div class="flex justify-between items-center">
+            <div>
+              <span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase tracking-wider rounded-md">Pilar 01</span>
+              <h4 class="text-base font-black text-slate-900 mt-2">A Regra 50/30/20 na Vida Universitária</h4>
+            </div>
+            <button onclick="toggleCardDetails('learn-1', this)" class="px-3 py-1.5 bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 rounded-xl text-xs font-bold transition-all flex items-center space-x-1">
+              <span>Expandir Conteúdo</span>
+              <i class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+            </button>
           </div>
-          <div class="p-3 bg-emerald-500/10 text-emerald-600 rounded-xl glow-emerald">
-            <i data-lucide="trending-up" class="w-6 h-6"></i>
-          </div>
-        </div>
-
-        <div class="glass-card rounded-2xl p-5 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Novos Clientes</p>
-            <h3 class="text-2xl font-bold text-slate-800 mt-1">1.280</h3>
-            <span class="text-xs text-indigo-600 font-medium inline-flex items-center mt-2">
-              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 mr-1"></i> +5% este mês
-            </span>
-          </div>
-          <div class="p-3 bg-indigo-500/10 text-indigo-600 rounded-xl glow-indigo">
-            <i data-lucide="users" class="w-6 h-6"></i>
+          <div id="learn-1" class="hidden mt-4 pt-4 border-t border-slate-100 text-xs text-slate-600 space-y-2 leading-relaxed">
+            <p>Dividir o dinheiro em três grandes blocos impede que o lazer consuma os custos de sobrevivência:</p>
+            <ul class="list-disc pl-5 space-y-1">
+              <li><strong>50% Necessidades:</strong> Aluguel/república, alimentação básica, transporte e materiais essenciais.</li>
+              <li><strong>30% Desejos Pessoais:</strong> Festas do diretório, saídas no fim de semana, serviços de streaming e hobbies.</li>
+              <li><strong>20% Reserva de Emergência:</strong> Poupança para custos não planejados (imprevistos de saúde, notebook quebrado).</li>
+            </ul>
           </div>
         </div>
 
-        <div class="glass-card rounded-2xl p-5 flex items-center justify-between">
+        <div class="glass-card rounded-3xl p-6 border border-slate-200/80">
+          <div class="flex justify-between items-center">
+            <div>
+              <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-wider rounded-md">Pilar 02</span>
+              <h4 class="text-base font-black text-slate-900 mt-2">Evitando a Armadilha do Cartão de Crédito</h4>
+            </div>
+            <button onclick="toggleCardDetails('learn-2', this)" class="px-3 py-1.5 bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 rounded-xl text-xs font-bold transition-all flex items-center space-x-1">
+              <span>Expandir Conteúdo</span>
+              <i class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+            </button>
+          </div>
+          <div id="learn-2" class="hidden mt-4 pt-4 border-t border-slate-100 text-xs text-slate-600 space-y-2 leading-relaxed">
+            <p>O limite do cartão de crédito não é extensão do seu salário. Pagar o valor mínimo da fatura ativa os juros do crédito rotativo, acumulando dívidas rapidamente.</p>
+            <p><strong>Regra de Ouro:</strong> Trate o cartão de crédito como compras no débito, garantindo que o dinheiro total para quitar a fatura já esteja na conta bancária.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SECTION 2: SIMULADOR (JOGO) ================= -->
+    <div id="tab-game" class="tab-content">
+      
+      <!-- SETUP FORM -->
+      <div id="game-setup-screen" class="max-w-xl mx-auto glass-card rounded-3xl p-6 sm:p-10 relative overflow-hidden shadow-lg border border-slate-200/80">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 rounded-3xl bg-indigo-600 text-white flex items-center justify-center text-2xl mx-auto mb-4 glow-primary">
+            <i class="fa-solid fa-gamepad"></i>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Simulador de Vida Universitária</h2>
+          <p class="text-slate-600 mt-2 text-xs sm:text-sm font-medium">
+            Tome decisões financeiras e acadêmicas ao longo de um semestre de 6 meses.
+          </p>
+        </div>
+
+        <form id="setup-form" onsubmit="startGame(event)" class="space-y-5">
           <div>
-            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Meta Mensal</p>
-            <h3 class="text-2xl font-bold text-slate-800 mt-1">84%</h3>
-            <span class="text-xs text-rose-500 font-medium inline-flex items-center mt-2">
-              <i data-lucide="activity" class="w-3.5 h-3.5 mr-1"></i> Em andamento
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">Seu Nome / Apelido</label>
+            <input type="text" id="player-name" required placeholder="Ex: Beatriz Silva" class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none font-semibold text-sm shadow-xs">
+          </div>
+
+          <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">Curso Universitário</label>
+            <select id="player-course" class="w-full px-4 py-3.5 rounded-2xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none font-semibold text-sm shadow-xs">
+              <option value="Engenharia de Software">Engenharia de Software (Alta exigência acadêmica)</option>
+              <option value="Medicina">Medicina (Carga horária densa)</option>
+              <option value="Design & Mídia">Design & Mídia (Projetos e materiais)</option>
+              <option value="Administração">Administração (Equilibrado)</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">Alojamento</label>
+              <select id="player-housing" class="w-full px-3.5 py-3 rounded-2xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 font-semibold text-xs shadow-xs">
+                <option value="pais">Casa dos Pais (Aluguel R$ 0)</option>
+                <option value="republica">República (Aluguel R$ 550/mês)</option>
+                <option value="sozinho">Morar Sozinho (Aluguel R$ 1.100/mês)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">Renda / Trabalho</label>
+              <select id="player-job" class="w-full px-3.5 py-3 rounded-2xl border border-slate-200 bg-white focus:ring-2 focus:ring-indigo-500 font-semibold text-xs shadow-xs">
+                <option value="nenhum">Apenas Bolsa (R$ 800)</option>
+                <option value="cafe">Meio Período (+R$ 600)</option>
+                <option value="explicacoes">Estágio (+R$ 1.000)</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white font-black text-sm tracking-wide shadow-lg shadow-indigo-500/25 hover:scale-[1.01] active:scale-[0.99] transition-all">
+            Iniciar Semestre Universitário 🚀
+          </button>
+        </form>
+      </div>
+
+      <!-- IN-GAME DASHBOARD -->
+      <div id="game-play-screen" class="hidden max-w-3xl mx-auto space-y-6">
+        
+        <!-- DASHBOARD STATS -->
+        <div class="glass-card rounded-3xl p-6 border border-slate-200/80 shadow-md">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+            <div class="flex items-center space-x-3.5">
+              <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-xl shadow-md" id="avatar-initial">B</div>
+              <div>
+                <h3 class="font-black text-slate-900 text-lg" id="display-name">Estudante</h3>
+                <p class="text-xs font-semibold text-slate-500"><span id="display-course">Curso</span> • Mês <span id="display-month" class="text-indigo-600 font-black">1</span> de 6</p>
+              </div>
+            </div>
+            <div class="px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-black rounded-full flex items-center space-x-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>Em Andamento</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+            <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200/60 text-center">
+              <span class="block text-[10px] font-black uppercase text-slate-400 tracking-wider mb-1">💰 Saldo</span>
+              <span class="text-lg sm:text-xl font-black text-emerald-600" id="stat-money">R$ 0</span>
+            </div>
+            <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200/60 text-center">
+              <span class="block text-[10px] font-black uppercase text-slate-400 tracking-wider mb-1">📚 CR / Notas</span>
+              <span class="text-lg sm:text-xl font-black text-indigo-600" id="stat-grades">0/100</span>
+            </div>
+            <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200/60 text-center">
+              <span class="block text-[10px] font-black uppercase text-slate-400 tracking-wider mb-1">🧠 Saúde Mental</span>
+              <span class="text-lg sm:text-xl font-black text-violet-600" id="stat-mental">0/100</span>
+            </div>
+            <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200/60 text-center">
+              <span class="block text-[10px] font-black uppercase text-slate-400 tracking-wider mb-1">⚡ Energia</span>
+              <span class="text-lg sm:text-xl font-black text-amber-600" id="stat-energy">0/100</span>
+            </div>
+          </div>
+
+          <!-- Ações Rápidas -->
+          <div class="flex flex-col sm:flex-row items-center justify-between bg-indigo-50/60 p-3 rounded-2xl border border-indigo-100 gap-2">
+            <span class="text-xs font-bold text-indigo-900 flex items-center space-x-1">
+              <i class="fa-solid fa-bolt text-indigo-600"></i>
+              <span>Ações Rápidas do Mês:</span>
             </span>
+            <div class="flex space-x-2 w-full sm:w-auto">
+              <button onclick="quickEnergyBoost()" class="flex-1 sm:flex-none px-3 py-1.5 bg-white text-indigo-700 hover:bg-indigo-600 hover:text-white rounded-xl text-[11px] font-bold border border-indigo-200 shadow-xs transition-all">
+                ☕ Tomar Café (-R$15 / +25⚡)
+              </button>
+              <button onclick="quickRest()" class="flex-1 sm:flex-none px-3 py-1.5 bg-white text-violet-700 hover:bg-violet-600 hover:text-white rounded-xl text-[11px] font-bold border border-violet-200 shadow-xs transition-all">
+                🛌 Descansar (+20⚡ / +10🧠)
+              </button>
+            </div>
           </div>
-          <div class="p-3 bg-rose-500/10 text-rose-500 rounded-xl glow-rose">
-            <i data-lucide="target" class="w-6 h-6"></i>
+        </div>
+
+        <!-- DILEMMA CARD -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-md">
+          <span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-[10px] font-black uppercase tracking-wider rounded-full">
+            Decisão Estratégica do Mês
+          </span>
+          
+          <h4 class="text-xl sm:text-2xl font-black text-slate-900 mt-3 mb-3" id="dilemma-title">Carregando evento...</h4>
+          <p class="text-slate-600 text-sm leading-relaxed mb-6" id="dilemma-desc">...</p>
+          
+          <div id="dilemma-choices" class="grid grid-cols-1 gap-3">
+            <!-- Renderizado via JS -->
           </div>
+        </div>
+      </div>
+
+      <!-- GAME OVER SCREEN -->
+      <div id="game-over-screen" class="hidden max-w-md mx-auto glass-card rounded-3xl p-8 text-center shadow-xl">
+        <div id="game-over-icon" class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4">🏆</div>
+        <h3 class="text-2xl font-black text-slate-900 mb-1" id="game-over-title">Fim do Semestre</h3>
+        <p class="text-xs font-semibold text-indigo-600 mb-4" id="game-over-archetype"></p>
+        <p class="text-slate-600 text-xs sm:text-sm mb-6 leading-relaxed" id="game-over-desc">Resumo da sua trajetória.</p>
+        <button onclick="resetGame()" class="w-full py-3.5 rounded-2xl bg-indigo-600 text-white font-bold text-sm shadow-md hover:bg-indigo-700 transition-all">
+          Reiniciar Simulador 🔄
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= SECTION 3: CALCULADORA ================= -->
+    <div id="tab-calculator" class="tab-content">
+      <div class="max-w-4xl mx-auto space-y-6">
+        
+        <div class="text-center mb-6">
+          <div class="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-2xl mx-auto mb-3 glow-primary">
+            <i class="fa-solid fa-calculator"></i>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Planejador Financeiro Universitário</h2>
+          <p class="text-slate-600 text-xs sm:text-sm font-medium mt-1">
+            Monte seu orçamento, descubra seu limite diário e analise a Regra 50/30/20.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- INPUTS (2 COLUNAS) -->
+          <div class="lg:col-span-2 space-y-6">
+            
+            <!-- Receitas -->
+            <div class="glass-card p-5 sm:p-6 rounded-3xl border border-slate-200/80">
+              <h3 class="text-sm font-black uppercase tracking-wider text-emerald-600 mb-4 flex items-center space-x-2">
+                <i class="fa-solid fa-wallet"></i>
+                <span>Rendimentos Mensais (Entradas)</span>
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Bolsa / Mesada (R$)</label>
+                  <input type="number" id="calc-inc-allowance" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Estágio / Emprego (R$)</label>
+                  <input type="number" id="calc-inc-job" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Freelas / Extras (R$)</label>
+                  <input type="number" id="calc-inc-extra" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+              </div>
+            </div>
+
+            <!-- Despesas Fixas -->
+            <div class="glass-card p-5 sm:p-6 rounded-3xl border border-slate-200/80">
+              <h3 class="text-sm font-black uppercase tracking-wider text-indigo-600 mb-4 flex items-center space-x-2">
+                <i class="fa-solid fa-house"></i>
+                <span>Custos Fixos (Necessidades)</span>
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Aluguel / República (R$)</label>
+                  <input type="number" id="calc-exp-rent" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Alimentação / Mercado (R$)</label>
+                  <input type="number" id="calc-exp-food" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Transporte / Passe (R$)</label>
+                  <input type="number" id="calc-exp-transport" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Contas (Luz, Água, Net) (R$)</label>
+                  <input type="number" id="calc-exp-bills" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+              </div>
+            </div>
+
+            <!-- Despesas Variáveis -->
+            <div class="glass-card p-5 sm:p-6 rounded-3xl border border-slate-200/80">
+              <h3 class="text-sm font-black uppercase tracking-wider text-violet-600 mb-4 flex items-center space-x-2">
+                <i class="fa-solid fa-mug-hot"></i>
+                <span>Custos Variáveis (Lazer & Estudos)</span>
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Lazer / Festas (R$)</label>
+                  <input type="number" id="calc-exp-leisure" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Xerox / Livros (R$)</label>
+                  <input type="number" id="calc-exp-study" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-600 mb-1">Assinaturas (Streaming) (R$)</label>
+                  <input type="number" id="calc-exp-subs" placeholder="0" oninput="calculateBudget()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-xs shadow-xs">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RESUMO LATERAL -->
+          <div class="space-y-4">
+            
+            <div class="glass-card p-6 rounded-3xl border border-slate-200/80 shadow-md">
+              <h4 class="text-xs font-black uppercase text-slate-400 tracking-wider mb-4">Resumo Mensal</h4>
+              
+              <div class="space-y-3 border-b border-slate-100 pb-4 mb-4">
+                <div class="flex justify-between items-center text-xs font-semibold">
+                  <span class="text-slate-500">Renda Total:</span>
+                  <span id="calc-total-inc" class="text-emerald-600 font-bold">R$ 0,00</span>
+                </div>
+                <div class="flex justify-between items-center text-xs font-semibold">
+                  <span class="text-slate-500">Despesas Totais:</span>
+                  <span id="calc-total-exp" class="text-rose-600 font-bold">R$ 0,00</span>
+                </div>
+              </div>
+
+              <div class="text-center pt-1 mb-4">
+                <span class="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">Saldo Final Mês</span>
+                <span id="calc-balance" class="text-2xl font-black text-emerald-600">+R$ 0,00</span>
+              </div>
+
+              <div class="bg-indigo-50/70 p-3.5 rounded-2xl border border-indigo-100 text-center">
+                <span class="block text-[10px] font-black uppercase tracking-wider text-indigo-500 mb-0.5">Teto de Gastos Livre Diário</span>
+                <span id="calc-daily-limit" class="text-sm font-black text-indigo-900">R$ 0,00 / dia</span>
+                <p class="text-[9px] text-indigo-600 mt-1 font-medium">Gastos diários permitidos sem estourar o mês</p>
+              </div>
+            </div>
+
+            <!-- REGRA 50/30/20 BARS -->
+            <div class="glass-card p-5 rounded-3xl border border-slate-200/80 space-y-3">
+              <h5 class="text-xs font-black uppercase tracking-wider text-slate-700 flex items-center justify-between">
+                <span>Análise Regra 50/30/20</span>
+                <i class="fa-solid fa-chart-pie text-indigo-500"></i>
+              </h5>
+
+              <div>
+                <div class="flex justify-between text-[10px] font-bold mb-1">
+                  <span class="text-slate-600">Necessidades (Max 50%)</span>
+                  <span id="pct-needs-text" class="text-indigo-600">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div id="bar-needs" class="bg-indigo-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-[10px] font-bold mb-1">
+                  <span class="text-slate-600">Desejos/Lazer (Max 30%)</span>
+                  <span id="pct-wants-text" class="text-violet-600">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div id="bar-wants" class="bg-violet-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-[10px] font-bold mb-1">
+                  <span class="text-slate-600">Reserva/Meta (Min 20%)</span>
+                  <span id="pct-savings-text" class="text-emerald-600">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div id="bar-savings" class="bg-emerald-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="calc-feedback" class="p-4 rounded-2xl border text-xs leading-relaxed bg-slate-100 border-slate-200 text-slate-700 font-medium">
+              Preencha os valores acima para visualizar a análise detalhada.
+            </div>
+
+          </div>
+
         </div>
 
       </div>
+    </div>
 
-      <!-- Seção Principal -->
-      <section class="glass-card rounded-2xl p-6">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-lg font-semibold text-slate-800">Atividades Recentes</h2>
-          <button class="btn-interactive text-xs font-semibold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg hover:bg-indigo-100">
-            Ver todas
+    <!-- ================= SECTION 4: QUIZ ================= -->
+    <div id="tab-quiz" class="tab-content">
+      <div class="max-w-xl mx-auto">
+        
+        <div id="quiz-container" class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-md">
+          <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
+            <span id="quiz-progress" class="text-xs font-black uppercase text-indigo-600 tracking-wider">Pergunta 1 de 5</span>
+            <span id="quiz-score-tracker" class="text-xs font-bold text-slate-500">Pontuação: 0 pts</span>
+          </div>
+
+          <h3 id="quiz-question" class="text-base sm:text-lg font-black text-slate-900 mb-6">Carregando pergunta...</h3>
+
+          <div id="quiz-options" class="space-y-3 mb-6">
+            <!-- Renderizado via JS -->
+          </div>
+
+          <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden w-full py-3.5 rounded-2xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition-all shadow-md">
+            Próxima Pergunta ➔
           </button>
         </div>
 
-        <div class="divide-y divide-slate-100">
-          <div class="py-3 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-              <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-              <span class="text-sm font-medium text-slate-700">Novo pagamento confirmado</span>
-            </div>
-            <span class="text-xs text-slate-400">Há 5 min</span>
+        <div id="quiz-result-screen" class="hidden glass-card rounded-3xl p-8 text-center shadow-md">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4">🏆</div>
+          <h3 class="text-2xl font-black text-slate-900 mb-1">Desafio Concluído!</h3>
+          <p id="quiz-final-score-text" class="text-sm font-bold text-indigo-600 mb-6">Pontuação final: 0 / 100 pts</p>
+
+          <div id="badges-container" class="flex flex-col items-center justify-center gap-3 mb-6">
+            <!-- Badges conquistadas no quiz -->
           </div>
-          <div class="py-3 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-              <div class="w-2.5 h-2.5 rounded-full bg-indigo-500"></div>
-              <span class="text-sm font-medium text-slate-700">Conta de usuário criada</span>
-            </div>
-            <span class="text-xs text-slate-400">Há 2 horas</span>
-          </div>
+
+          <button onclick="restartQuiz()" class="w-full py-3.5 rounded-2xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition-all shadow-md">
+            Refazer Quiz 🔄
+          </button>
         </div>
-      </section>
 
-    </main>
+      </div>
+    </div>
 
-    <!-- Conteúdo: Aba 2 (Relatórios) -->
-    <main id="analytics" class="tab-content animate-fadeIn">
-      <section class="glass-card rounded-2xl p-8 text-center space-y-3">
-        <i data-lucide="bar-chart-3" class="w-10 h-10 text-indigo-500 mx-auto"></i>
-        <h2 class="text-lg font-semibold text-slate-800">Módulo de Relatórios</h2>
-        <p class="text-sm text-slate-500 max-w-md mx-auto">Esta aba está pronta para receber gráficos e detalhamentos de métricas.</p>
-      </section>
-    </main>
+  </main>
 
+  <!-- MOBILE BOTTOM NAVIGATION -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-200 py-2.5 px-6 flex justify-between items-center z-40">
+    <button onclick="switchTab('learn')" class="mobile-nav-btn text-indigo-600 flex flex-col items-center space-y-1">
+      <i class="fa-solid fa-book-open text-base"></i>
+      <span class="text-[10px] font-bold">Aprenda</span>
+    </button>
+    <button onclick="switchTab('game')" class="mobile-nav-btn text-slate-400 flex flex-col items-center space-y-1">
+      <i class="fa-solid fa-gamepad text-base"></i>
+      <span class="text-[10px] font-bold">Jogo</span>
+    </button>
+    <button onclick="switchTab('calculator')" class="mobile-nav-btn text-slate-400 flex flex-col items-center space-y-1">
+      <i class="fa-solid fa-calculator text-base"></i>
+      <span class="text-[10px] font-bold">Calculadora</span>
+    </button>
+    <button onclick="switchTab('quiz')" class="mobile-nav-btn text-slate-400 flex flex-col items-center space-y-1">
+      <i class="fa-solid fa-trophy text-base"></i>
+      <span class="text-[10px] font-bold">Quiz</span>
+    </button>
   </div>
 
-  <!-- Scripts -->
-  <script>
-    // Inicializa ícones do Lucide
-    lucide.createIcons();
+  <!-- MODAL DE DICAS RELÂMPAGO -->
+  <div id="quick-tip-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+    <div class="glass-card bg-white max-w-md w-full rounded-3xl p-6 shadow-2xl relative border border-slate-100 animate-fadeIn">
+      <button onclick="closeTipModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs transition-all">
+        ✕
+      </button>
 
-    // Lógica de Abas
-    function openTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-white', 'shadow-sm', 'text-slate-700');
-        btn.classList.add('text-slate-500');
-      });
+      <h3 class="text-base font-black text-slate-900 mb-4 pr-6" id="modal-tip-title">Dica de Economia</h3>
+      <div id="modal-tip-body" class="mb-6">
+        <!-- Conteúdo dinâmico -->
+      </div>
 
-      document.getElementById(tabId).classList.add('active');
+      <button onclick="closeTipModal()" class="w-full py-3 rounded-2xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition-all shadow-md">
+        Entendi! Fechar Dica
+      </button>
+    </div>
+  </div>
 
-      const activeBtn = event.currentTarget;
-      activeBtn.classList.add('bg-white', 'shadow-sm', 'text-slate-700');
-      activeBtn.classList.remove('text-slate-500');
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
